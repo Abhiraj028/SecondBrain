@@ -1,10 +1,10 @@
 import express, {Express, Request, Response} from "express"
 import { UserModel, LinkModel, ContentModel, TagsModel } from "./db"
 import mongoose from "mongoose"
-import {JWT_KEY, ResponseCodes} from "./env"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { AuthMiddleware } from "./middleware"
+require("dotenv").config();
 
 interface SignBodyType {
     username: string,
@@ -19,6 +19,15 @@ interface ContentBodyType{
     title:string,
     tags:string[],
     userId: string
+}
+
+enum ResponseCodes {
+    Success = 200,        // OK
+    BadRequest = 400,     // Client-side input error
+    Unauthorized = 401,   // Authentication required
+    Forbidden = 403,      // User not allowed
+    NotFound = 404,       // Resource not found
+    InternalError = 500   // Server-side error
 }
 
 
@@ -65,7 +74,7 @@ app.post("/api/v1/signin",async (req: Request<{},{},SignBodyType>, res: Response
         if(!compare){
             return res.status(ResponseCodes.BadRequest).json({msg:"Username or Password entered is incorrect"});
         }
-        const token = jwt.sign({username:username} as AuthJWTPayload,JWT_KEY,{expiresIn:"1h"});
+        const token = jwt.sign({username:username} as AuthJWTPayload,process.env.JWT_KEY!,{expiresIn:"1h"});
         
         res.status(ResponseCodes.Success).json({msg:"Successfully Signed in.",token});
     }catch(err){
@@ -99,7 +108,7 @@ app.get("/api/v1/brain/:shareLink",(req:Request,res:Response) =>{
 })
 
 app.listen(3000, async () => {
-    await mongoose.connect("mongodb+srv://abhirajgautam:abhirajgautam@cluster0.atdkzuw.mongodb.net/brainly");
+    await mongoose.connect(process.env.mongo_uri!);
     console.log("Connected to DB");
     console.log("Server is running on port 3000");
 })
