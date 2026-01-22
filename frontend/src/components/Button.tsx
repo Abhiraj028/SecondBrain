@@ -28,8 +28,8 @@ const sizeStyles : Record<SizeType, string> = {
 
 export const Button = (props: ButtonProps) => {
     return (<button className={`${defaultStyles} ${sizeStyles[props.size]} ${variantStyles[props.variant]}`} onClick={() => props.onClick()}>
-        {props.startIcon?<div className="pr-1.5">{props.startIcon}</div>:null}
+        {props.startIcon?<div className="pr-2">{props.startIcon}</div>:null}
         {props.text}
-        {props.endIcon?<div className="pl-1.5">{props.endIcon}</div>:null}
+        {props.endIcon?<div className="pl-2">{props.endIcon}</div>:null}
         </button>)
 }
