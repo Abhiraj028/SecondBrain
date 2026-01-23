@@ -1,19 +1,25 @@
+import { ArticleIcon } from "../icons/ArticleIcon";
 import { ShareIcon } from "../icons/ShareIcon";
+import { TrashIcon } from "../icons/TrashIcon";
+import { TwitterIcon } from "../icons/TwitterIcon";
+import { YoutubeIcon } from "../icons/YoutubeIcon";
 
 interface CardProps{
     title: string;
     link : string;
-    type: "twitter" | "youtube";
+    type: "twitter" | "youtube" | "article";
 }
 
 export function Card({title,link,type}: CardProps){
     return(
         <>
-        <div className="p-6 rounded-md border shadow-md border-gray-200 bg-white max-w-96 max-h-96 overflow-auto min-w-96 ">
+        <div className="p-6 rounded-lg border shadow-md border-gray-200 bg-white max-w-96 max-h-96 overflow-auto min-w-96 ">
             <div className="flex justify-between items-center">
                 <div className="flex items-center text-xl font-medium">
-                    <div className="text-gray-500  pr-2">
-                        <ShareIcon size="md" />
+                    <div className="text-gray-500  pr-4">
+                        {type == "youtube" && <YoutubeIcon size="lg"/>}
+                        {type == "twitter" && <TwitterIcon size="lg"/>}
+                        {type == "article" && <ArticleIcon size="lg"/>}
                     </div>
                     {title}
                 </div>
@@ -24,7 +30,7 @@ export function Card({title,link,type}: CardProps){
                         </a>
                     </div>
                     <div className="text-gray-500 ">
-                        <ShareIcon size="md" />
+                        <TrashIcon size="md" />
                     </div>
                 </div>
             </div>

@@ -12,7 +12,8 @@ interface ButtonProps{
     text: string;
     startIcon?: any;
     endIcon?: any;
-    onClick() : void;
+    additional?: string;
+    onClick?(): void;
 }
 
 
@@ -27,7 +28,7 @@ const sizeStyles : Record<SizeType, string> = {
 }
 
 export const Button = (props: ButtonProps) => {
-    return (<button className={`${defaultStyles} ${sizeStyles[props.size]} ${variantStyles[props.variant]}`} onClick={() => props.onClick()}>
+    return (<button className={` ${props.additional} ${defaultStyles} ${sizeStyles[props.size]} ${variantStyles[props.variant]}`} onClick={props.onClick}>
         {props.startIcon?<div className="pr-2">{props.startIcon}</div>:null}
         {props.text}
         {props.endIcon?<div className="pl-2">{props.endIcon}</div>:null}
