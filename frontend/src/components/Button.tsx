@@ -18,7 +18,7 @@ interface ButtonProps{
 
 
 
-const defaultStyles = "rounded-md hover:opacity-90 transition-all flex items-center cursor-pointer transition-border-color 0.25s  font-[500]"
+const defaultStyles = "rounded-md hover:opacity-90 transition-all flex items-center transition-border-color 0.25s  font-[500]"
 
 const sizeStyles : Record<SizeType, string> = {
     "sm": "py-1 px-2",
@@ -28,7 +28,7 @@ const sizeStyles : Record<SizeType, string> = {
 }
 
 export const Button = (props: ButtonProps) => {
-    return (<button className={` ${props.additional} ${defaultStyles} ${sizeStyles[props.size]} ${variantStyles[props.variant]}`} onClick={props.onClick}>
+    return (<button className={` ${props.additional} ${defaultStyles} cursor-pointer ${sizeStyles[props.size]} ${variantStyles[props.variant]}`} onClick={props.onClick}>
         {props.startIcon?<div className="pr-2">{props.startIcon}</div>:null}
         {props.text}
         {props.endIcon?<div className="pl-2">{props.endIcon}</div>:null}

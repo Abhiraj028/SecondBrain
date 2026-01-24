@@ -1,15 +1,52 @@
+import { useRef } from "react";
 import { CrossIcon } from "../icons/CrossIcon";
 import { Button } from "./Button";
 import { InputForm } from "./InputForm";
+import axios from "axios";
 
 interface CreateContentModalProps{
     open: boolean;
     onClose: () => void;
 }
 
+const backend_url = import.meta.env.VITE_backend_url;
 
 export function CreateContentModal({open, onClose} : CreateContentModalProps){
+    const linkRef = useRef<HTMLInputElement>(null);
+    const titleRef = useRef<HTMLInputElement>(null);
+    const typeRef = useRef<HTMLSelectElement>(null);
+
     if (!open) return null;
+
+    async function addContent(){
+        const title = titleRef.current?.value;
+        const link = linkRef.current?.value;
+        const type = typeRef.current?.value;
+        
+        const Authheader = `Bearer ${localStorage.getItem("token")}`;
+        console.log(Authheader);
+        try{
+            const sendData = await axios.post(`${backend_url}/content`,{
+                title,
+                link,
+                type
+                },{
+                headers: {
+                    "Authorization" : Authheader
+                }
+            });
+            alert(sendData.data.msg);
+            onClose();
+
+        }catch(err: unknown){
+            if(axios.isAxiosError(err)){
+                console.log(err);
+                alert(`${err.response?.data.msg}`);
+            }else{
+                alert("An unknown error occurred. "+err);
+            }
+        }
+    }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -24,10 +61,10 @@ export function CreateContentModal({open, onClose} : CreateContentModalProps){
                 </div>
 
                 <form className="flex flex-col gap-3" onSubmit={(e) => { e.preventDefault(); onClose(); }}>
-                    <InputForm id="title" placeholder="Content Title" />
-                    <InputForm id="link" placeholder="Content Link" />
+                    <InputForm ref={titleRef} id="title" placeholder="Content Title" />
+                    <InputForm ref={linkRef} id="link" placeholder="Content Link" />
 
-                    <select id="type" defaultValue="" className="border border-gray-300 rounded-md p-2 focus:outline-none">
+                    <select ref={typeRef} id="type" defaultValue="" className="border border-gray-300 rounded-md p-2 focus:outline-none">
                         <option value="" disabled>Choose type</option>
                         <option value="twitter">Twitter</option>
                         <option value="youtube">YouTube</option>
@@ -35,7 +72,7 @@ export function CreateContentModal({open, onClose} : CreateContentModalProps){
                     </select>
 
                     <div className="flex justify-end mt-1">
-                        <Button additional= "px-8" variant="primary" size="md" text="Add" onClick={() => {}} />
+                        <Button additional= "px-8" variant="primary" size="md" text="Add" onClick={addContent} />
                     </div>
                 </form>
         </div>
