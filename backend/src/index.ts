@@ -5,19 +5,26 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { AuthMiddleware } from "./middleware"
 import { ResponseCodes, ShareType, SignBodyType, ShareLinkType, ContentBodyType, JWTType, DelContentType } from "./utils"
+import cors from "cors"; 
 require("dotenv").config();
 
+// Admin Admining
 
-const app: Express = express()
+const app: Express = express(); 
 
+app.use(cors());
 app.use(express.json())
 
 app.post("/api/v1/signup", async (req : Request<{},{},SignBodyType>,res : Response) => {
     const username = req.body.username;
     const password = req.body.password;
     
+    console.log(username);
+    console.log(password);
+
     const checker = await UserModel.findOne({username:username});
     if(checker){
+        console.log("User already exists");
         return res.status(ResponseCodes.BadRequest).json({msg:"The user already exist, please sign in"});
     }
 
@@ -32,6 +39,7 @@ app.post("/api/v1/signup", async (req : Request<{},{},SignBodyType>,res : Respon
             message:`User Signed Up Successfully! Welcome, ${username}`
         })
     }catch(err){
+        console.log("Some error occured");
         res.status(ResponseCodes.InternalError).json({msg:"some error occured: ",err});
     }
 });
@@ -43,19 +51,25 @@ app.post("/api/v1/signin",async (req: Request<{},{},SignBodyType>, res: Response
         const username = req.body.username;
         const password = req.body.password;
 
+        console.log(username);
+        console.log(password);
+
         const check = await UserModel.findOne({username:username});
         if(!check){
+            console.log("User not found");
         return res.status(ResponseCodes.NotFound).json({msg:"User not found"});
         }
 
         const compare = await bcrypt.compare(password,check.password);
         if(!compare){
+            console.log("Credentials are incorrect");
             return res.status(ResponseCodes.BadRequest).json({msg:"Username or Password entered is incorrect"});
         }
         const token = jwt.sign({id:check._id.toString()} as JWTType ,process.env.JWT_KEY!,{expiresIn:"1h"});
         
         res.status(ResponseCodes.Success).json({msg:"Successfully Signed in.",token});
     }catch(err){
+        console.log("Some error occured");
         res.status(ResponseCodes.InternalError).json({msg:"Some error occured",err});
     }
 
@@ -101,14 +115,15 @@ app.get("/api/v1/content", AuthMiddleware , async (req: Request, res : Response)
     if(data.length == 0){
         return res.json({msg:"No content has been added. Begin your Second Brain!"});
     }
-    
+    console.log(data);
     return res.status(ResponseCodes.Success).json(data);
 
 });
 
 
-app.delete("/api/v1/content", AuthMiddleware, async (req: Request<{},{},DelContentType>, res:Response) =>{
-    const contentId = req.body.contentId;
+app.delete("/api/v1/content/:contentId", AuthMiddleware, async (req: Request<DelContentType>, res:Response) =>{
+    const contentId = req.params.contentId;
+    console.log(contentId);
     if(!contentId){
         return res.status(ResponseCodes.BadRequest).json({msg:"Specify the content to be deleted"})
     }
@@ -142,9 +157,9 @@ app.post("/api/v1/brain/share", AuthMiddleware , async(req:Request<{},{},ShareTy
             if(!current){
                 const hash = await bcrypt.hash(userId,1);
                 await LinkModel.create({hash,userId});
-                return res.json({"Your shareable link has been created": hash});
+                return res.json({msg: "Your shareable link has been created", link: hash});
             }
-            return res.json({"Your shareable link already exists": current.hash})
+            return res.json({msg: "Your shareable link already exists", link: current.hash});
         }else{
             await LinkModel.deleteOne({userId});
             return res.json({msg:"Sharing turned off"});

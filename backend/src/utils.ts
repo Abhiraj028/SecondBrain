@@ -8,7 +8,7 @@ export interface JWTType{
 }
 
 export interface DelContentType{
-    contentId : string
+    contentId? : string
 }
 
 export interface ContentBodyType{
