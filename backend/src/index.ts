@@ -203,7 +203,13 @@ app.get("/api/v1/brain/",async (req:Request<ShareLinkType>,res:Response) =>{
 });
 
 app.listen(3000, async () => {
-    await mongoose.connect(process.env.mongo_uri!);
+    try{
+        await mongoose.connect(process.env.mongo_uri!);
+
+    }catch{
+        console.log("Error connecting to DB");
+        process.exit(1);
+    }
     console.log("Connected to DB");
     console.log("Server is running on port 3000");
 })

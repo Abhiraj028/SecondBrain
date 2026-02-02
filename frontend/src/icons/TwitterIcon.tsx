@@ -8,7 +8,7 @@ export function TwitterIcon(props: IconProps){
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
-            className={iconSizeVariants[props.size] || "size-4"}
+            className={`text-white ${iconSizeVariants[props.size] || "size-4"}`}
             aria-hidden="true"
         >
             <path

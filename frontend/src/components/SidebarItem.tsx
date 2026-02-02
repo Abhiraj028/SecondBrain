@@ -7,9 +7,9 @@ interface SidebarItemProps{
 
 export function SidebarItem(props: SidebarItemProps){
     return(
-        <div className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer">
+        <div className="flex items-center gap-3 p-2 hover:bg-purple-800/30 rounded-md cursor-pointer transition-colors">
             {props.icon}
-            <span className="text-md font-medium">{props.text}</span>
+            <span className="text-md font-medium text-gray-200">{props.text}</span>
         </div>
     )
 }

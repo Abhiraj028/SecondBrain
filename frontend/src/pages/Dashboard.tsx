@@ -59,7 +59,7 @@ export function Dashboard() {
     <div>
       <Sidebar />
 
-      <div className='p-4 ml-72 min-h-screen bg-gray-100'>
+      <div className='p-4 ml-72 min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-purple-900'>
         <CreateContentModal open={open} onClose={() => {setOpen(false); setRefresh((prev: boolean) => !prev);}}/>
         <div className='flex justify-end gap-4'>
           <Button startIcon={<PlusIcon size="md"/>} variant="primary" size="md" text="Add Content" onClick={() => {setOpen(true)}} />
@@ -68,7 +68,7 @@ export function Dashboard() {
 
         <div className='flex gap-4 ml-24 mt-6 flex-wrap'>
           {contents.length > 0 ? contents.map(({title,link,type, _id}, index) => <Card _id={_id} key={index} title={title} link={link} type={type}/>) : 
-          <div className='text-gray-500 text-lg ml-86 mt-24 '>No content added yet. Click on "Add Content" to get started!</div>}
+          <div className='text-gray-400 text-lg ml-86 mt-24 '>No content added yet. Click on "Add Content" to get started!</div>}
         </div>
       </div>
     </div>
