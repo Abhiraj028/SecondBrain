@@ -9,11 +9,17 @@ import { useContent } from '../hooks/useContent'
 import type { CardProps } from '../components/Card'
 import axios from 'axios'
 
-export function Dashboard() {
+interface DashboardProps {
+  filter: string;
+  setFilter: (filter: React.SetStateAction<string>) => void;
+}
+
+const backend_url = import.meta.env.VITE_backend_url;
+
+export function Dashboard(props: DashboardProps) {
   const [open, setOpen] = useState(false);
   const {contents, setRefresh}: {contents: CardProps[], setRefresh: any} = useContent();
   const [share, setShare] = useState<boolean>(false);
-  const [filter, setFilter] = useState<string>("");
   const firstRun = useRef(true);
 
     if(!localStorage.getItem("token")){
@@ -30,7 +36,7 @@ export function Dashboard() {
 
     const shareContent = async () => {
       if(share){
-        const datareturn = await axios.post(`http://localhost:3000/api/v1/brain/share`, {
+        const datareturn = await axios.post(`${backend_url}/brain/share`, {
           share: share
         }, {
           headers: {
@@ -46,7 +52,7 @@ export function Dashboard() {
         });
         console.log(datareturn?.data);
         alert("Your share link has been copied to the clipboard!");
-        await navigator.clipboard.writeText(`http://localhost:5173/brain/${datareturn?.data.link}`);
+        await navigator.clipboard.writeText(`${window.location.origin}/brain/${datareturn?.data.link}`);
         
 
       }else{
@@ -58,7 +64,7 @@ export function Dashboard() {
 
   return (
     <div>
-      <Sidebar setFilter={setFilter} filter={filter} />
+      <Sidebar setFilter={props.setFilter} filter={props.filter} />
 
       <div className='pt-4 pl-4 ml-16 sm:ml-20 md:ml-56 lg:ml-64 min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-purple-900'>
         <CreateContentModal open={open} onClose={() => {setOpen(false); setRefresh((prev: boolean) => !prev);}}/>
@@ -69,10 +75,10 @@ export function Dashboard() {
 
         <div className='flex gap-4 sm:ml-8 mt-6 pt-8 flex-wrap'>
           {contents.length > 0 ? contents.map(({title,link,type, _id}, index) => {
-            if(filter === ""){
+            if(props.filter === ""){
               return <Card _id={_id} key={index} title={title} link={link} type={type}/>
             }else{
-              if(type === filter){
+              if(type === props.filter){
                 return <Card _id={_id} key={index} title={title} link={link} type={type}/>
               }
             }
