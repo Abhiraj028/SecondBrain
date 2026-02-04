@@ -36,7 +36,7 @@ app.post("/api/v1/signup", async (req : Request<{},{},SignBodyType>,res : Respon
             password:hashed
         })
         res.json({
-            message:`User Signed Up Successfully! Welcome, ${username}`
+            msg:`User Signed Up Successfully! Welcome, ${username}`
         })
     }catch(err){
         console.log("Some error occured");

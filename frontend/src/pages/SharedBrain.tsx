@@ -33,20 +33,29 @@ export function SharedBrain(props: SharedContentProps) {
     fetchSharedContent()
   }, [link])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return (
+    <div className='min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-purple-900 flex items-center justify-center text-gray-200'>
+      Loading...
+    </div>
+  )
 
   return (
-    <div className='p-4 min-h-screen bg-gray-100'>
-      <h1 className='text-2xl font-semibold mb-6 text-center'>Shared Brain by user: {contents.length > 0 ? contents[0].userId["username"] : "Unknown"}</h1>
-      <div className='flex '>
-        <Sidebar filter={props.filter} setFilter={props.setFilter}  />
-        <div className='flex gap-4 flex-wrap ml-16 sm:ml-20 md:ml-56 lg:ml-72'>
-          {contents.length > 0 ? contents.map(({title, link, type, _id}, index) => 
-            <Card _id={_id} key={index} title={title} link={link} type={type}/>) : 
-            <div className='text-gray-500'>No content shared</div>}
+    <div className='min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-purple-900'>
+      <Sidebar filter={props.filter} setFilter={props.setFilter} />
+
+      <div className='pt-4 pl-4 ml-16 sm:ml-20 md:ml-56 lg:ml-64'>
+        <h1 className='text-2xl font-semibold mb-6 text-gray-200 text-center'>
+          Shared Brain by user: {contents.length > 0 ? contents[0].userId["username"] : "Unknown"}
+        </h1>
+
+        <div className='flex gap-4 flex-wrap'>
+          {contents.length > 0 ? contents.map(({title, link, type, _id}, index) => (
+            <Card _id={_id} key={index} title={title} link={link} type={type}/>
+          )) : (
+            <div className='text-gray-400'>No content shared</div>
+          )}
         </div>
       </div>
-
     </div>
   )
 }
