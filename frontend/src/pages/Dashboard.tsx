@@ -60,7 +60,7 @@ export function Dashboard() {
     <div>
       <Sidebar setFilter={setFilter} filter={filter} />
 
-      <div className='pt-4 ml-16 sm:ml-20 md:ml-56 lg:ml-72 min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-purple-900'>
+      <div className='pt-4 pl-4 ml-16 sm:ml-20 md:ml-56 lg:ml-64 min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-purple-900'>
         <CreateContentModal open={open} onClose={() => {setOpen(false); setRefresh((prev: boolean) => !prev);}}/>
         <div className='flex justify-end gap-4 mr-4 mt-2'>
           <Button startIcon={<PlusIcon size="md"/>} variant="primary" size="md" text="Add Content" onClick={() => {setOpen(true)}} />
